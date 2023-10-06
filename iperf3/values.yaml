@@ -40,8 +40,8 @@ securityContext: {}
 
 service:
   type: LoadBalancer
-  #port: 40004
-  #nodePort: 40005
+  port: 5201
+  #nodePort: 5202
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
