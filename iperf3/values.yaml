@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: networkstatic/iperf3
+  repository: nicolaka/netshoot
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
@@ -40,7 +40,7 @@ securityContext: {}
 
 service:
   type: LoadBalancer
-  port: 5201
+  #port: 5201
   #nodePort: 5202
 
 resources: {}
