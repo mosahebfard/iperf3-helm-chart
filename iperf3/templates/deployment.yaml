@@ -1,59 +1,99 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "iperf3.fullname" . }}
-  labels:
-    {{- include "iperf3.labels" . | nindent 4 }}
+  name: {{.Chart.Name}}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
-  {{- end }}
+  replicas: {{ .Values.replicas }}
+  revisionHistoryLimit: 1
   selector:
     matchLabels:
-      {{- include "iperf3.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/name: iperf3
+      app.kubernetes.io/instance: {{.Release.Name}}
+  strategy:
+    type: Recreate
   template:
     metadata:
-      annotations:
-        checksum/install_info: {{ printf "%s-%s" .Chart.Name .Chart.Version | sha256sum }}
-      {{- with .Values.podAnnotations }}
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       labels:
-        {{- include "iperf3.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/name: iperf3
+        app.kubernetes.io/instance: {{.Release.Name}}
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      serviceAccountName: {{ include "iperf3.serviceAccountName" . }}
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: iperf3
+          image: {{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}
           command:
-            - sh
-            - -c
-          args:
-            - iperf3 -s {{ .Values.config.args | default "-f M" }} -p {{ .Values.service.port }}
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+            - iperf3
+            - -s
+            - -p 40000
+            - -i 1
+            - --forceflush
+            {{- if .Values.verbose }}
+            - -V
+            {{- end }}
           ports:
-            - name: tcp
-              containerPort: {{ .Values.service.port }}
+            - name: iperf3
+              containerPort: 40000
               protocol: TCP
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+      restartPolicy: Always
+status: {}
+
+
+
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: {{ include "iperf3.fullname" . }}
+#   labels:
+#     {{- include "iperf3.labels" . | nindent 4 }}
+# spec:
+#   {{- if not .Values.autoscaling.enabled }}
+#   replicas: {{ .Values.replicaCount }}
+#   {{- end }}
+#   selector:
+#     matchLabels:
+#       {{- include "iperf3.selectorLabels" . | nindent 6 }}
+#   template:
+#     metadata:
+#       annotations:
+#         checksum/install_info: {{ printf "%s-%s" .Chart.Name .Chart.Version | sha256sum }}
+#       {{- with .Values.podAnnotations }}
+#         {{- toYaml . | nindent 8 }}
+#       {{- end }}
+#       labels:
+#         {{- include "iperf3.selectorLabels" . | nindent 8 }}
+#     spec:
+#       {{- with .Values.imagePullSecrets }}
+#       imagePullSecrets:
+#         {{- toYaml . | nindent 8 }}
+#       {{- end }}
+#       serviceAccountName: {{ include "iperf3.serviceAccountName" . }}
+#       securityContext:
+#         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+#       containers:
+#         - name: {{ .Chart.Name }}
+#           command:
+#             - sh
+#             - -c
+#           args:
+#             - iperf3 -s {{ .Values.config.args | default "-f M" }} -p {{ .Values.service.port }}
+#           securityContext:
+#             {{- toYaml .Values.securityContext | nindent 12 }}
+#           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+#           imagePullPolicy: {{ .Values.image.pullPolicy }}
+#           ports:
+#             - name: tcp
+#               containerPort: {{ .Values.service.port }}
+#               protocol: TCP
+#           resources:
+#             {{- toYaml .Values.resources | nindent 12 }}
+#       {{- with .Values.nodeSelector }}
+#       nodeSelector:
+#         {{- toYaml . | nindent 8 }}
+#       {{- end }}
+#       {{- with .Values.affinity }}
+#       affinity:
+#         {{- toYaml . | nindent 8 }}
+#       {{- end }}
+#       {{- with .Values.tolerations }}
+#       tolerations:
+#         {{- toYaml . | nindent 8 }}
+#       {{- end }}
