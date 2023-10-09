@@ -40,7 +40,7 @@ securityContext: {}
 
 service:
   type: LoadBalancer
-  #port: 4004
+  port: 4004
   #nodePort: 4005
 
 resources: {}
