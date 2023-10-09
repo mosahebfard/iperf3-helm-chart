@@ -3,12 +3,12 @@ entries:
   iperf3:
   - apiVersion: v2
     appVersion: 3.0.0
-    created: "2023-10-09T14:08:10.998027245+02:00"
+    created: "2023-10-09T14:27:02.966674323+02:00"
     description: A Helm chart for Kubernetes
-    digest: cdf5c0aaeb10b98f2b8592df0a3298be79bac0de55a0f36e74b2666a750c9e43
+    digest: c33620759e7bcb23acda8a7e0cf2cd747f209acb6f3c3b4dccc9b731b7b427d4
     name: iperf3
     type: application
     urls:
     - https://mosahebfard.github.io/iperf3-helm-chart/iperf3-0.0.1.tgz
     version: 0.0.1
-generated: "2023-10-09T14:08:10.997209953+02:00"
+generated: "2023-10-09T14:27:02.964543566+02:00"
