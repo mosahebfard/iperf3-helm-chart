@@ -40,7 +40,7 @@ securityContext: {}
 
 service:
   type: LoadBalancer
-  #port: 5201
+  port: {}
   #nodePort: 5202
 
 resources: {}
